@@ -1,13 +1,20 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"context"
+	"core-be-gdsc/database"
+	"core-be-gdsc/routes"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
+	database.EnvInit()
+	client := database.ConnectFirestore()
 	app := fiber.New()
+	ctx := context.Background()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	routes.UserRoutes(app, client, ctx)
 
 	app.Listen(":3000")
 }
